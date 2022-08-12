@@ -17,8 +17,11 @@ An interactive CLI tool to automate operations on GitHub using its API
 2. Have `GITHUB_TOKEN` and `GITHUB_USER` set as environment vars
 
 ## Images
+
 Menu
-![menu](./img/options_menu.png)
+
+![](./img/options_menu.png)
 
 Respository list (LR option)
-![repo list](./img/repo_list.png)
+
+![](./img/repo_list.png)
