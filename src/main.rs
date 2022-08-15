@@ -1,3 +1,30 @@
+//! # 1. Description
+//! CLI to interact with GitHub's API
+//!
+//! ## 2. Features
+//!
+//! - Create respository
+//! - Delete respository
+//! - List all respositories
+//!
+//! ## 3. Requirements
+//! - Have `GITHUB_TOKEN` (your github token) and `GITHUB_USER` (your github username) set as environment vars
+//! 
+//! ## 4. Instalation
+//! 
+//! ### 4.1 Linux Binary
+//! Download this [file](https://github.com/costa86/autogit/blob/main/autogit)
+//! 
+//! Run (make sure you've set executable permission to it)
+//! ```console
+//! $ ./autogit
+//! ```
+//! ### 4.2 Cargo
+//! ```console
+//! $ cargo install autogit
+//! ```
+
+
 use colored::*;
 use reqwest::header::USER_AGENT;
 use serde::{Deserialize, Serialize};
@@ -11,21 +38,24 @@ use tabled::{Style, Table, Tabled};
 const BASE_ROUTE: &str = "https://api.github.com";
 const AGENT: &str = "foo";
 
+
+
+///Delete a GitHub repository
 fn delete_repo(repo_name: &str) {
     let user = get_github_credentials().0;
     let token = get_github_credentials().1;
 
     let url = format!("{BASE_ROUTE}/repos/{user}/{repo_name}");
-
+    
     let client = reqwest::blocking::Client::new();
-
+    
     let res = client
-        .delete(url)
-        .header(USER_AGENT, AGENT)
-        .bearer_auth(&token)
+    .delete(url)
+    .header(USER_AGENT, AGENT)
+    .bearer_auth(&token)
         .send();
-
-    match res {
+        
+        match res {
         Ok(_) => {
             let msg = format!("Deleted {repo_name}");
             display_message("ok", &msg, "green");
@@ -44,26 +74,27 @@ fn get_github_credentials() -> (String, String) {
     (github_user, github_token)
 }
 
+///Create a new GitHub repository based on current directory
 fn create_repo(name: &str) {
     let token = get_github_credentials().1;
     let client = reqwest::blocking::Client::new();
     let url = format!("{BASE_ROUTE}/user/repos");
-
+    
     let mut map = HashMap::new();
     map.insert("name", name);
-
+    
     let res = client
         .post(url)
         .header(USER_AGENT, AGENT)
         .json(&map)
         .bearer_auth(&token)
         .send();
-
-    match res {
-        Ok(_) => {
-            let msg = format!("Creating {name}...");
-            display_message("ok", &msg, "green");
-            run_git_commands(&name)
+        
+        match res {
+            Ok(_) => {
+                let msg = format!("Creating {name}...");
+                display_message("ok", &msg, "green");
+                run_git_commands(&name)
         }
         Err(_) => {
             let msg = format!("Could not create repo for {name}...");
@@ -88,6 +119,7 @@ struct RepoRow {
     created_at: String,
 }
 
+///List all GitHub repositories
 fn list_repos() {
     let url = format!("{BASE_ROUTE}/user/repos?per_page=100");
     let token = get_github_credentials().1;
@@ -103,8 +135,8 @@ fn list_repos() {
         .unwrap()
         .json()
         .unwrap();
-
-    for i in res {
+        
+        for i in res {
         let repo_row = RepoRow {
             name: i.name,
             url: i.html_url,
@@ -114,17 +146,19 @@ fn list_repos() {
         repo_list.push(repo_row);
         counter += 1;
     }
-
+    
     let table = Table::new(&repo_list).with(Style::modern());
     println!("{table}");
 }
 
+///Run a git command
 fn run_cmd(commands: &[&str]) -> Result<(), Error> {
     Command::new("git").args(commands).spawn()?;
     thread::sleep(time::Duration::from_secs(3));
     Ok(())
 }
 
+///Get user's input
 pub fn get_user_input(text: &str) -> String {
     let mut input = String::new();
     println!("{}", text);
@@ -132,6 +166,7 @@ pub fn get_user_input(text: &str) -> String {
     String::from(input.trim())
 }
 
+///Run git-related commands
 fn run_git_commands(repo_name: &str) {
     let user = get_github_credentials().0;
 
@@ -144,9 +179,9 @@ fn run_git_commands(repo_name: &str) {
         "add",
         "origin",
         format!("git@github.com:{user}/{repo_name}.git").as_str(),
-    ])
+        ])
     .unwrap();
-
+    
     match run_cmd(&["push", "-u", "origin", "main"]) {
         Ok(_) => {
             let msg = format!("Done. Go to https://github.com/{user}/{repo_name} to see.");
@@ -159,28 +194,30 @@ fn run_git_commands(repo_name: &str) {
     };
 }
 
+///Display message to the user
 pub fn display_message(message_type: &str, message: &str, color: &str) {
     let msg = format!("[{}] {}", message_type.to_uppercase(), message).color(color);
     println!("{msg}");
 }
 
+
 fn main() {
     let mut input = String::new();
-
+    
     let title = "AUTOGIT - Iterate with GitHub API \nAuthor: Lorenzo Costa <costa86@zoho.com>\n";
     println!("{title}");
-
+    
     let options_menu = "Available options (case insensitive):
     LR: List repositories
     CR: Create a repository based on current directory
     DR: Delete a repository
     H:  Help
     Q:  Quit";
-
+    
     loop {
         println!("{options_menu}");
         stdin().read_line(&mut input).unwrap();
-
+        
         match input.to_uppercase().as_str().trim() {
             "LR" => list_repos(),
             "CR" => create_repo(&get_user_input("Repo name:")),

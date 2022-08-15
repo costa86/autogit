@@ -1,11 +1,15 @@
 [package]
 name = "autogit"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 license = "MIT"
 description = "An interactive CLI tool to automate operations on GitHub using its API"
+keywords = ["cli", "git", "github", "api"]
+homepage = "https://github.com/costa86/autogit"
+repository = "https://github.com/costa86/autogit"
+authors = ["Lorenzo Costa <costa86@zoho.com>"]
+readme = "README.md"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 reqwest = { version = "0.11", features = ["blocking", "json"] }
