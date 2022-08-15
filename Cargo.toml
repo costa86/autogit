@@ -2,6 +2,8 @@
 name = "autogit"
 version = "0.1.0"
 edition = "2021"
+license = "MIT"
+description = "An interactive CLI tool to automate operations on GitHub using its API"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
