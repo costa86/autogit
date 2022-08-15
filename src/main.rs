@@ -1,30 +1,3 @@
-//! # 1. Description
-//! CLI to interact with GitHub's API
-//!
-//! ## 2. Features
-//!
-//! - Create respository
-//! - Delete respository
-//! - List all respositories
-//!
-//! ## 3. Requirements
-//! - Have `GITHUB_TOKEN` (your github token) and `GITHUB_USER` (your github username) set as environment vars
-//! 
-//! ## 4. Instalation
-//! 
-//! ### 4.1 Linux Binary
-//! Download this [file](https://github.com/costa86/autogit/blob/main/autogit)
-//! 
-//! Run (make sure you've set executable permission to it)
-//! ```console
-//! $ ./autogit
-//! ```
-//! ### 4.2 Cargo
-//! ```console
-//! $ cargo install autogit
-//! ```
-
-
 use colored::*;
 use reqwest::header::USER_AGENT;
 use serde::{Deserialize, Serialize};
@@ -37,7 +10,6 @@ use tabled::{Style, Table, Tabled};
 
 const BASE_ROUTE: &str = "https://api.github.com";
 const AGENT: &str = "foo";
-
 
 
 ///Delete a GitHub repository
