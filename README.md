@@ -4,10 +4,18 @@ An interactive CLI tool to automate operations on GitHub using its API
 
 ## 1. Features
 
-1. Create a repository
-2. Display all repositories
-3. Delete a repository
-4. Visit repository page
+### Repositories
+
+1. Create
+2. Display all 
+3. Delete 
+4. Visit page
+
+### Gists
+
+1. Display all 
+2. Delete 
+3. Visit page
 
 ## 2. Demo
 ![](./img/menu.gif)
